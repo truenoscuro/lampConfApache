@@ -1,0 +1,24 @@
+FROM php:8-apache
+RUN apt-get update && apt-get upgrade -y
+RUN docker-php-ext-install pdo pdo_mysql && docker-php-ext-enable pdo pdo_mysql
+# Conf apache2
+#COnf rewrite + general
+
+RUN a2enmod rewrite.load
+
+#Crear passwords
+RUN apt-get install apache2-utils
+RUN htpasswd -cb /etc/apache2/.example nofre  nofre
+# Per crear mes contres lleva rla -c pel mateix fitxer! en aquest cas es .example
+
+#Conf virtualhosts
+COPY ./confApache/sites-available /etc/apache2/sites-available
+COPY ./confApache/slCertificats  /etc/ssl/certs/
+RUN a2ensite example.conf
+
+
+#Restart apache2
+RUN service apache2 restart
+
+
+

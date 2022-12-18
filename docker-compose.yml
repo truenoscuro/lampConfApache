@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  phpapache:
+    build:
+      context: ./
+      dockerfile: DockerLamp
+    volumes:
+      - ./web:/var/www/html
+    
+    env_file:
+      - .env
+    ports:
+      - 80:80
+
+  mariadb: #Es el CONTAINERNAME
+    image: mariadb:10.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=${PASSWORD}
+      - MYSQL_DATABASE=${DATABASE}
+    volumes:
+      - ./importBBDD:/docker-entrypoint-initdb.d 
+      - ./baseDades:/var/lib/mysql
+    ports:
+      - 3306:3306
+  
+  phpmyadmin:
+    image: phpmyadmin
+    environment:
+      - PMA_HOST=${CONTAINERNAME}
+    expose:
+      - 8083
+    ports:
+      - 8083:80
+  
+
+
+
+  
